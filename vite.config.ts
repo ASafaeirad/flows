@@ -1,5 +1,11 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+const targetMap = {
+  windows: 'chrome105',
+  macos: 'safari113',
+  linux: 'chrome105',
+};
 
 export default defineConfig({
   plugins: [react()],
@@ -8,12 +14,10 @@ export default defineConfig({
     port: 1420,
     strictPort: true,
   },
-  // to make use of `TAURI_DEBUG` and other env variables
-  // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
-  envPrefix: ["VITE_", "TAURI_"],
+  envPrefix: ['VITE_', 'TAURI_'],
   build: {
-    target: process.env.TAURI_PLATFORM == "windows" ? "chrome105" : "safari13",
-    minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
+    target: targetMap[process.env.TAURI_PLATFORM] ?? 'chrome105',
+    minify: !process.env.TAURI_DEBUG ? 'esbuild' : false,
     sourcemap: !!process.env.TAURI_DEBUG,
   },
 });
