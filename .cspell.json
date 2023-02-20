@@ -7,13 +7,17 @@
       "addWords": true
     }
   ],
-  "ignorePaths": ["node_modules/", "dist/"],
+  "ignorePaths": [
+    "node_modules/",
+    "dist/"
+  ],
   "words": [
     "Alireza",
     "esbuild",
     "fullstacksjs",
     "Parens",
     "Safaeirad",
+    "tailwindcss",
     "tauri"
   ]
 }
