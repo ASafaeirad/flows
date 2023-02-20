@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "prist",
+    "productName": "flows",
     "version": "0.0.0"
   },
   "tauri": {
@@ -62,7 +62,7 @@
         "fullscreen": false,
         "height": 600,
         "resizable": true,
-        "title": "prist",
+        "title": "flows",
         "width": 800
       }
     ]
