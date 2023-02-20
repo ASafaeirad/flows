@@ -1,0 +1,19 @@
+{
+  "version": "0.2",
+  "dictionaryDefinitions": [
+    {
+      "name": "charity",
+      "path": "./configs/cspell/charity.txt",
+      "addWords": true
+    }
+  ],
+  "ignorePaths": ["node_modules/", "dist/"],
+  "words": [
+    "Alireza",
+    "esbuild",
+    "fullstacksjs",
+    "Parens",
+    "Safaeirad",
+    "tauri"
+  ]
+}

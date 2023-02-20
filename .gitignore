@@ -7,18 +7,14 @@ Thumbs.db
 /.idea
 /.vscode
 
-# environment
-.env.local
+#
+/dist
+tsconfig.tsbuildinfo
 
-# npm
-.npm
-npm-debug.log*
+# environment
+.env
+
+# package-manager
 node_modules/
 *.tgz
-
-# yarn
-.yarn-integrity
-yarn.lock
-yarn-debug.log*
-yarn-error.log*
 pnpm-debug.log*
