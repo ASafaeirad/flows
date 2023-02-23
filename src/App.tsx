@@ -5,7 +5,7 @@ import { Separator } from './components/Separator';
 const App = () => {
   return (
     <div className="flex w-96 flex-col gap-3 rounded-lg bg-dark-0 p-5 text-light-0">
-      <Input autoFocus placeholder="Script" />
+      <Input onSelect={console.log} autoFocus placeholder="Script" />
       <Separator />
       <Select
         items={['Alierza', 'Balireza', 'Calireza', 'Saliz']}

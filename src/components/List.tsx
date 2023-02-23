@@ -1,5 +1,5 @@
 import { isEmpty } from '@fullstacksjs/toolbox';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useState } from 'react';
 
 import { Input } from './Input';
 import { Separator } from './Separator';
@@ -9,7 +9,7 @@ interface Props<T> {
   items: T[];
   label: string;
   placeholder?: string;
-  onSelect: (item: T) => void;
+  onSelect?: (item: T) => void;
   getLabel?: (x: T) => string;
   getId?: (x: T) => string;
 }
@@ -53,18 +53,14 @@ export const Select = <T = string,>({
     if (e.key === 'Enter') {
       e.preventDefault();
       const item = filteredItems[selectedIndex];
-      if (item) onSelect(item);
+      if (item) onSelect?.(item);
     }
   };
-
-  useEffect(() => {
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
-  });
 
   return (
     <div className="flex flex-col gap-3">
       <Input
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
