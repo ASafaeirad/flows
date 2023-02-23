@@ -9,7 +9,6 @@ import {
 } from 'date-fns';
 
 import { startOfNextMonth } from './date-utils';
-import { DateGrid } from './DateGrid';
 import { DateItem } from './DateItem';
 
 interface Props {
@@ -20,7 +19,7 @@ interface Props {
 
 export const Days = ({ value, days, onSelect }: Props) => {
   return (
-    <DateGrid>
+    <>
       {days.map((day) => (
         <DateItem
           key={day.valueOf()}
@@ -36,6 +35,6 @@ export const Days = ({ value, days, onSelect }: Props) => {
           {formatDate(day, 'dd')}
         </DateItem>
       ))}
-    </DateGrid>
+    </>
   );
 };

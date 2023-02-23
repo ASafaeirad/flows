@@ -1,4 +1,3 @@
-import { DateGrid } from './DateGrid';
 import { DateItem } from './DateItem';
 
 const weekDays = [
@@ -13,12 +12,12 @@ const weekDays = [
 
 export const Weekdays = () => {
   return (
-    <DateGrid>
+    <>
       {weekDays.map(({ day, isWeekend }) => (
         <DateItem key={day} isLabel isActive={isWeekend}>
           {day}
         </DateItem>
       ))}
-    </DateGrid>
+    </>
   );
 };

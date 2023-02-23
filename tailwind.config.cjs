@@ -14,6 +14,7 @@ module.exports = {
         placeholder: 'rgb(255 255 255 / .2)',
         light: {
           0: '#ffffff',
+          1: '#b3b3b3',
           muted: 'rgb(255 255 255 / .4)',
         },
         dark: {

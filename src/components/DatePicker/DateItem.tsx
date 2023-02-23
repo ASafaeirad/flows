@@ -26,10 +26,11 @@ export const DateItem = ({
     className: cls(
       className,
       {
-        'text-light-muted': isMuted,
+        'text-placeholder': isMuted,
         'text-accent-0': isActive,
         'border border-border': isToday,
         'bg-accent-0 text-dark-0': isSelected,
+        'text-xs': isLabel,
       },
       'flex h-8 w-8 items-center justify-center rounded text-sm',
     ),

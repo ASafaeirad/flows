@@ -8,7 +8,9 @@ import {
 } from 'date-fns';
 import { useMemo } from 'react';
 
+import { DateGrid } from './DateGrid';
 import { Days } from './Days';
+import { MonthItem } from './MonthItem';
 import { Weekdays } from './Weekdays';
 
 interface Props {
@@ -18,16 +20,20 @@ interface Props {
 }
 
 export const Calendar = ({ value, startFrom, onSelect }: Props) => {
+  const start = previousMonday(startOfMonth(startFrom));
+  const end = nextSunday(startOfMonth(addMonths(startFrom, 1)));
+
   const days = useMemo(() => {
-    const start = previousMonday(startOfMonth(startFrom));
-    const end = nextSunday(startOfMonth(addMonths(startFrom, 1)));
     return eachDayOfInterval({ start, end });
-  }, [startFrom]);
+  }, [end, start]);
 
   return (
-    <div className="bg-dark-1 px-5 py-3">
-      <Weekdays />
-      <Days value={value} days={days} onSelect={onSelect} />
+    <div className="flex flex-col items-center gap-2 rounded border border-border bg-dark-1 px-5 py-3">
+      <MonthItem value={value} />
+      <DateGrid>
+        <Weekdays />
+        <Days value={value} days={days} onSelect={onSelect} />
+      </DateGrid>
     </div>
   );
 };
