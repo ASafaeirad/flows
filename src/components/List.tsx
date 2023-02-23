@@ -1,81 +1,92 @@
-import { clamp } from '@fullstacksjs/toolbox';
+import { isEmpty } from '@fullstacksjs/toolbox';
 import { Fragment, useEffect, useState } from 'react';
 
 import { Input } from './Input';
 import { Separator } from './Separator';
+import { useFilter } from './useFilter';
 
-export const Select = ({
+interface Props<T> {
+  items: T[];
+  label: string;
+  placeholder?: string;
+  onSelect: (item: T) => void;
+  getLabel?: (x: T) => string;
+  getId?: (x: T) => string;
+}
+
+export const Select = <T = string,>({
   items,
   label,
   placeholder,
-}: {
-  items: string[];
-  label: string;
-  placeholder?: string;
-}) => {
-  const [selectedIndex, innerSetSelectedIndex] = useState(0);
-
+  onSelect,
+  getLabel = String,
+  getId = String,
+}: Props<T>) => {
   const [value, setValue] = useState('');
-  const [filteredItems, setFilteredItems] = useState(items);
+  const { filteredItems, selectedIndex, setSelected } = useFilter(
+    items,
+    value,
+    getLabel,
+  );
 
-  const setSelected = (cb: (n: number) => number) => {
-    innerSetSelectedIndex((n) => {
-      const next = cb(n);
-      return clamp(next, { min: 0, max: filteredItems.length - 1 });
-    });
-  };
-
-  useEffect(() => {
-    setFilteredItems(
-      items.filter((i) =>
-        i.toLocaleLowerCase().includes(value.toLocaleLowerCase()),
-      ),
-    );
-  }, [items, value]);
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
+  const handleKeyDown = (e: KeyboardEvent | React.KeyboardEvent) => {
     if (e.key === 'ArrowDown') {
-      setSelected((s) => s + 1);
       e.preventDefault();
+      setSelected((s) => s + 1);
     }
 
     if (e.key === 'ArrowUp') {
-      setSelected((s) => s - 1);
       e.preventDefault();
+      setSelected((s) => s - 1);
     }
 
     if (e.key === 'j' && e.ctrlKey) {
-      setSelected((s) => s + 1);
       e.preventDefault();
+      setSelected((s) => s + 1);
     }
 
     if (e.key === 'k' && e.ctrlKey) {
-      setSelected((s) => s - 1);
       e.preventDefault();
+      setSelected((s) => s - 1);
+    }
+
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      const item = filteredItems[selectedIndex];
+      if (item) onSelect(item);
     }
   };
 
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  });
+
   return (
-    <div onKeyDown={handleKeyDown} className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3">
       <Input
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
       />
-      <div className="flex flex-col gap-2 rounded border border-white/10 bg-bg-700 py-3 px-5">
-        <div className="text-sm text-white/20">{label}</div>
-        {filteredItems.map((item, index) => (
-          <Fragment key={item}>
-            <div
-              className={
-                selectedIndex === index ? 'text-yellow-500' : undefined
-              }
-            >
-              {item}
-            </div>
-            {index <= item.length && <Separator />}
-          </Fragment>
-        ))}
+      <div className="bg-bg-700 flex flex-col gap-2 rounded border border-border py-3 px-5">
+        <div className="text-sm text-light-muted">{label}</div>
+        {isEmpty(filteredItems) ? (
+          <div className="text-light-muted">No Item</div>
+        ) : (
+          filteredItems.map((item, index) => (
+            <Fragment key={getId(item)}>
+              <div
+                className={
+                  selectedIndex === index ? 'text-accent-0' : undefined
+                }
+              >
+                {getLabel(item)}
+              </div>
+              {index < filteredItems.length - 1 && <Separator />}
+            </Fragment>
+          ))
+        )}
       </div>
     </div>
   );

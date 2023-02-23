@@ -1,3 +1,4 @@
+import '@fontsource/inconsolata/400.css';
 import './style.css';
 
 import React from 'react';

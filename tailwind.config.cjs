@@ -2,10 +2,25 @@
 module.exports = {
   content: ['./index.html', './src/**/*.tsx'],
   theme: {
+    fontFamily: {
+      mono: ['Inconsolata', 'monospace'],
+    },
     extend: {
       colors: {
-        'bg-800': '#212025',
-        'bg-700': '#27262C',
+        accent: {
+          0: '#f5b765',
+          1: '#d19a67',
+        },
+        placeholder: 'rgb(255 255 255 / .2)',
+        light: {
+          0: '#ffffff',
+          muted: 'rgb(255 255 255 / .4)',
+        },
+        dark: {
+          0: '#212025',
+          1: '#27262C',
+        },
+        border: 'rgb(255 255 255 / .1)',
       },
     },
   },

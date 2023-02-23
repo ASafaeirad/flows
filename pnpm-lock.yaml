@@ -1,6 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
+  '@fontsource/inconsolata': 4.5.10
   '@fullstacksjs/eslint-config': 9.1.0
   '@fullstacksjs/toolbox': 3.0.2
   '@fullstacksjs/tsconfig': 1.0.0
@@ -22,6 +23,7 @@ specifiers:
   vite: 4.0.0
 
 dependencies:
+  '@fontsource/inconsolata': 4.5.10
   '@fullstacksjs/toolbox': 3.0.2
   '@tauri-apps/api': 1.2.0
   react: 18.2.0
@@ -512,6 +514,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@fontsource/inconsolata/4.5.10:
+    resolution: {integrity: sha512-kShpiWE3RD4LH4YlZPbyE4VMt826DA7Ugw1jNJt54mxpP7nUsI9gflQOLWSJ9AMLkqPLpjza9iZkKRmU8Q7MOQ==}
+    dev: false
 
   /@fullstacksjs/eslint-config/9.1.0_jgceq3qrcofmey6sxaxt5cyhr4:
     resolution: {integrity: sha512-UKVcwYxgHCyvYTU3TXVk/eu78+MxKAtZhBURB1HMTATsqgRigyvnKsoPTK2dcYVX1uk49+3car9tS55mFNmGSA==}
