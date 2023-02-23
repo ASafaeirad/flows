@@ -1,3 +1,15 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+button {
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+@layer utilities {
+  .grid-cols-7-auto {
+    grid-template-columns: repeat(7, auto);
+  }
+}

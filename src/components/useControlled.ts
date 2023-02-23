@@ -1,10 +1,8 @@
 import { useCallback, useRef, useState } from 'react';
 
 export interface UseControlledProps<T = unknown> {
-  controlled: T;
+  controlled: T | undefined;
   default: T | undefined;
-  name: string;
-  state?: string;
 }
 
 type Setter<T> = T | ((prevValue: T) => T);
@@ -23,5 +21,5 @@ export function useControlled<T = unknown>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return [value, setValueIfUncontrolled] as const;
+  return [value!, setValueIfUncontrolled] as const;
 }

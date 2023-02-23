@@ -1,3 +1,4 @@
+import { DatePicker } from './components/DatePicker';
 import { Input } from './components/Input';
 import { Select } from './components/List';
 import { Separator } from './components/Separator';
@@ -13,6 +14,8 @@ const App = () => {
         onSelect={console.log}
         placeholder="Placeholder"
       />
+      <Separator />
+      <DatePicker />
     </div>
   );
 };

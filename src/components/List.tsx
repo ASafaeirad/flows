@@ -1,5 +1,5 @@
 import { isEmpty } from '@fullstacksjs/toolbox';
-import { Fragment, useState } from 'react';
+import { forwardRef, Fragment, useState } from 'react';
 
 import { Input } from './Input';
 import { Separator } from './Separator';
@@ -14,14 +14,17 @@ interface Props<T> {
   getId?: (x: T) => string;
 }
 
-export const Select = <T = string,>({
-  items,
-  label,
-  placeholder,
-  onSelect,
-  getLabel = String,
-  getId = String,
-}: Props<T>) => {
+export const InnerSelect = <T = string,>(
+  {
+    items,
+    label,
+    placeholder,
+    onSelect,
+    getLabel = String,
+    getId = String,
+  }: Props<T>,
+  ref: React.ForwardedRef<HTMLInputElement>,
+) => {
   const [value, setValue] = useState('');
   const { filteredItems, selectedIndex, setSelected } = useFilter(
     items,
@@ -64,6 +67,7 @@ export const Select = <T = string,>({
         placeholder={placeholder}
         value={value}
         onChange={(e) => setValue(e.target.value)}
+        ref={ref}
       />
       <div className="bg-bg-700 flex flex-col gap-2 rounded border border-border py-3 px-5">
         <div className="text-sm text-light-muted">{label}</div>
@@ -87,3 +91,5 @@ export const Select = <T = string,>({
     </div>
   );
 };
+
+export const Select = forwardRef(InnerSelect);
