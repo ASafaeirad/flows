@@ -1,49 +1,42 @@
-import { format } from 'date-fns';
-import { useRef } from 'react';
+import { addDays, addWeeks, format } from 'date-fns';
+import { useRef, useState } from 'react';
 
 import { Input } from '../Input';
-import { useControlled } from '../useControlled';
 import { Calendar } from './Calendar';
 
 interface Props {
-  value?: Date;
-  onChange?: (value: Date, e?: HTMLInputElement) => void;
-  startFrom?: Date;
   dateFormat?: string;
-  dayFormat?: string;
-  minDate?: Date;
-  maxDate?: Date;
-  disabledDates?: Date[];
   onSelect?: (date: Date) => void;
+  defaultValue?: Date;
 }
 
 const today = new Date();
 
 export const DatePicker = ({
-  onChange,
-  startFrom = today,
   dateFormat = 'yyyy-MM-dd',
-  minDate,
-  maxDate,
-  disabledDates,
   onSelect,
-  ...props
+  defaultValue = today,
 }: Props) => {
-  const [value, setValue] = useControlled<Date>({
-    controlled: props.value,
-    default: today,
-  });
+  const [value, setValue] = useState(defaultValue);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const handleSelect = (date: Date) => {
-    setValue(date);
-    onSelect?.(date);
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'j' || e.key === 'ArrowDown') setValue(addWeeks(value, 1));
+    if (e.key === 'k' || e.key === 'ArrowUp') setValue(addWeeks(value, -1));
+    if (e.key === 'l' || e.key === 'ArrowRight') setValue(addDays(value, 1));
+    if (e.key === 'h' || e.key === 'ArrowLeft') setValue(addDays(value, -1));
+    if (e.key === 'd') setValue(today);
+    if (e.key === 'Enter') onSelect?.(value);
   };
 
   return (
     <div className="relative flex flex-col gap-3">
-      <Input ref={inputRef} value={format(value, dateFormat)} />
-      <Calendar startFrom={startFrom} value={value} onSelect={handleSelect} />
+      <Input
+        onKeyDown={handleKeyDown}
+        ref={inputRef}
+        value={format(value, dateFormat)}
+      />
+      <Calendar startFrom={value} value={value} onSelect={onSelect} />
     </div>
   );
 };

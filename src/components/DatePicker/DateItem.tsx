@@ -1,7 +1,8 @@
+import { usePress } from '@react-aria/interactions';
 import cls from 'classnames';
 import { createElement } from 'react';
 
-type ButtonAttrs = JSX.IntrinsicElements['button'];
+type ButtonAttrs = Omit<JSX.IntrinsicElements['button'], 'onClick'>;
 
 interface Props extends ButtonAttrs {
   isMuted?: boolean;
@@ -9,6 +10,7 @@ interface Props extends ButtonAttrs {
   isToday?: boolean;
   isLabel?: boolean;
   isSelected?: boolean;
+  onPress?: (e: any) => void;
 }
 
 export const DateItem = ({
@@ -18,9 +20,11 @@ export const DateItem = ({
   isToday,
   isSelected,
   isLabel,
+  onPress,
   ...props
 }: Props): JSX.Element => {
   const Component = isLabel ? 'div' : 'button';
+  const { pressProps } = usePress({ onPress });
 
   return createElement(Component, {
     className: cls(
@@ -34,6 +38,7 @@ export const DateItem = ({
       },
       'flex h-8 w-8 items-center justify-center rounded text-sm',
     ),
+    ...pressProps,
     ...props,
   });
 };

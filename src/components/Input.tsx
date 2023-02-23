@@ -11,7 +11,7 @@ export const Input = forwardRef<HTMLInputElement, Props>(
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
         e.preventDefault();
-        const text = e.target.value;
+        const text = (e.target as HTMLInputElement).value;
         onSelect?.(text);
       }
     };

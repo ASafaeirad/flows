@@ -23,6 +23,7 @@ export const Days = ({ value, days, onSelect }: Props) => {
       {days.map((day) => (
         <DateItem
           key={day.valueOf()}
+          onPress={() => onSelect?.(day)}
           isActive={isWeekend(day)}
           isSelected={isSameDay(day, value)}
           isToday={isToday(day)}
@@ -30,7 +31,6 @@ export const Days = ({ value, days, onSelect }: Props) => {
             isBefore(day, startOfMonth(value)) ||
             isAfter(day, startOfNextMonth(value))
           }
-          onClick={() => onSelect?.(day)}
         >
           {formatDate(day, 'dd')}
         </DateItem>

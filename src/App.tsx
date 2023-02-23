@@ -15,7 +15,7 @@ const App = () => {
         placeholder="Placeholder"
       />
       <Separator />
-      <DatePicker />
+      <DatePicker onSelect={console.log} />
     </div>
   );
 };

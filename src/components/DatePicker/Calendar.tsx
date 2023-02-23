@@ -22,10 +22,7 @@ interface Props {
 export const Calendar = ({ value, startFrom, onSelect }: Props) => {
   const start = previousMonday(startOfMonth(startFrom));
   const end = nextSunday(startOfMonth(addMonths(startFrom, 1)));
-
-  const days = useMemo(() => {
-    return eachDayOfInterval({ start, end });
-  }, [end, start]);
+  const days = useMemo(() => eachDayOfInterval({ start, end }), [end, start]);
 
   return (
     <div className="flex flex-col items-center gap-2 rounded border border-border bg-dark-1 px-5 py-3">
