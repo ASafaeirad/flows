@@ -8,7 +8,7 @@ import {
   startOfMonth,
 } from 'date-fns';
 
-import { startOfNextMonth } from './date-utils';
+import { startOfNextMonth } from '../date-utils';
 import { DateItem } from './DateItem';
 
 interface Props {
