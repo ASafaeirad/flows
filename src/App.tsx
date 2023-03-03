@@ -1,6 +1,8 @@
-import { isLastIndex, isNull } from '@fullstacksjs/toolbox';
-import { Fragment, useRef, useState } from 'react';
+import { isNull } from '@fullstacksjs/toolbox';
+import { usePress } from '@react-aria/interactions';
+import { Fragment, useEffect, useReducer, useRef, useState } from 'react';
 
+import { Button } from './components/Button';
 import { type Prompt, PromptInput } from './components/Prompt';
 import { Selected } from './components/Selected';
 import { Separator } from './components/Separator';
@@ -26,47 +28,59 @@ const d: Prompt = {
   required: false,
 };
 
-const configs = [x, y, d];
+const prompts = [x, y, d];
+
+type Result = Record<string, Date | string>;
 
 const App = () => {
   const [step, setStep] = useState(0);
-  const [results, setResults] = useState<Record<string, Date | string>>({});
-  const ref = useRef<HTMLInputElement>(null);
+  const [results, setResults] = useReducer(
+    (prev: Result, next: Result) => ({ ...prev, ...next }),
+    {},
+  );
+  const ref = useRef<HTMLButtonElement | HTMLInputElement>(null);
+
+  useEffect(() => {
+    ref.current?.focus();
+  }, [step]);
 
   const handleSubmit = (config: Prompt, value: Date | string) => {
-    setResults((r) => ({
-      ...r,
-      [config.key]: value,
-    }));
+    setResults({ [config.key]: value });
     setStep((c) => (c += 1));
-    setTimeout(() => {
-      ref.current?.focus();
-    }, 0);
   };
 
-  const config = configs[step];
+  const { pressProps } = usePress({
+    onPress: () => {
+      console.log(results);
+    },
+  });
+
+  const currentPrompt = prompts[step];
 
   return (
     <div className="flex w-96 flex-col gap-3 rounded-lg bg-dark-0 p-5 text-light-0">
-      {configs.map((c, i) => {
-        const value = results[c.key];
-        if (i < step && !isNull(value))
-          return (
-            <Fragment key={c.key}>
-              <Selected label={c.label} value={value} />
-              {!isLastIndex(configs, i) && <Separator />}
-            </Fragment>
-          );
-
-        return null;
+      {prompts.map((prompt, i) => {
+        const value = results[prompt.key];
+        const haveResult = i < step && !isNull(value);
+        return haveResult ? (
+          <Fragment key={prompt.key}>
+            <Selected label={prompt.label} value={value} />
+            <Separator />
+          </Fragment>
+        ) : null;
       })}
-      {!isNull(config) ? (
+
+      {!isNull(currentPrompt) ? (
         <PromptInput
-          ref={ref}
-          {...config}
-          onSelect={(e) => handleSubmit(config, e)}
+          ref={ref as React.RefObject<HTMLInputElement>}
+          {...currentPrompt}
+          onSelect={(e) => handleSubmit(currentPrompt, e)}
         />
-      ) : null}
+      ) : (
+        <Button ref={ref as React.RefObject<HTMLButtonElement>} {...pressProps}>
+          Run
+        </Button>
+      )}
     </div>
   );
 };
