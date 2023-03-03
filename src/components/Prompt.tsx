@@ -6,6 +6,7 @@ import { Select } from './List';
 
 interface PromptProps {
   label: string;
+  key: string;
 }
 
 type PromptAttributes<T> =
