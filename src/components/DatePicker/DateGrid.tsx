@@ -1,8 +1,8 @@
-export const DateGrid = ({
-  children,
-}: {
+interface Props {
   children: React.ReactNode;
-}): JSX.Element => {
+}
+
+export const DateGrid = ({ children }: Props): JSX.Element => {
   return (
     <div className="grid-cols-7-auto my-1 grid w-full justify-between gap-y-0.5">
       {children}

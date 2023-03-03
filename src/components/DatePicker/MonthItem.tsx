@@ -6,7 +6,7 @@ interface Props {
 
 export const MonthItem = ({ value }: Props): JSX.Element => {
   return (
-    <button className="text-light-1 flex rounded text-sm">
+    <button className="flex rounded text-sm text-light-1">
       {format(value, 'MMMM')}
     </button>
   );

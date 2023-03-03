@@ -1,9 +1,9 @@
 import { isEmpty } from '@fullstacksjs/toolbox';
 import { forwardRef, Fragment, useState } from 'react';
 
+import { useFilter } from '../hooks';
 import { Input } from './Input';
 import { Separator } from './Separator';
-import { useFilter } from './useFilter';
 
 interface Props<T = string> {
   items: T[];

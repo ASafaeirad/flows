@@ -1,8 +1,8 @@
 import { addDays, addWeeks, format } from 'date-fns';
 import { forwardRef, useRef, useState } from 'react';
 
+import { useForkRef } from '../../hooks';
 import { Input } from '../Input';
-import { useForkRef } from '../useForkRef';
 import { Calendar } from './Calendar';
 
 interface Props {
