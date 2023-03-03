@@ -1,17 +1,17 @@
 import { isLastIndex, isNull } from '@fullstacksjs/toolbox';
 import { Fragment, useRef, useState } from 'react';
 
-import { Prompt, type PromptT } from './components/Prompt';
+import { type Prompt, PromptInput } from './components/Prompt';
 import { Selected } from './components/Selected';
 import { Separator } from './components/Separator';
 
-const x: PromptT = {
+const x: Prompt = {
   key: 'name',
   label: 'Label',
   type: 'Text',
   required: true,
 };
-const y: PromptT = {
+const y: Prompt = {
   key: 'select',
   label: 'Label',
   type: 'Select',
@@ -19,21 +19,21 @@ const y: PromptT = {
   required: false,
   defaultValue: '5',
 };
-const d: PromptT = {
+const d: Prompt = {
   key: 'date',
   label: 'Label',
   type: 'Date',
   required: false,
 };
 
-const configs: PromptT[] = [x, y, d];
+const configs = [x, y, d];
 
 const App = () => {
   const [step, setStep] = useState(0);
   const [results, setResults] = useState<Record<string, Date | string>>({});
   const ref = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (config: PromptT, value: Date | string) => {
+  const handleSubmit = (config: Prompt, value: Date | string) => {
     setResults((r) => ({
       ...r,
       [config.key]: value,
@@ -61,7 +61,7 @@ const App = () => {
         return null;
       })}
       {!isNull(config) ? (
-        <Prompt
+        <PromptInput
           ref={ref}
           {...config}
           onSelect={(e) => handleSubmit(config, e)}

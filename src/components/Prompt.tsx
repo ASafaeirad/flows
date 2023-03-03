@@ -29,13 +29,13 @@ export type InputPrompt = PromptAttributes<string> &
     type: 'Text';
   };
 
-export type PromptT = DatePrompt | InputPrompt | SelectPrompt;
+export type Prompt = DatePrompt | InputPrompt | SelectPrompt;
 
-type Props = PromptT & {
+type Props = Prompt & {
   onSelect: (e: Date | string) => void;
 };
 
-export const Prompt = forwardRef<HTMLInputElement, Props>((props, ref) => {
+export const PromptInput = forwardRef<HTMLInputElement, Props>((props, ref) => {
   if (props.type === 'Date')
     return (
       <DatePicker
