@@ -16,10 +16,6 @@ void isRegistered('CommandOrControl+Shift+C').then((registered) => {
     });
 });
 
-void appWindow.listen('init', (e) => {
-  console.log(e);
-});
-
 const root = ReactDOM.createRoot(document.getElementById('root')!);
 
 root.render(

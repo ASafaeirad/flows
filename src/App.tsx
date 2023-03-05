@@ -9,43 +9,31 @@ import { Button } from './components/Button';
 import { type Prompt, PromptInput } from './components/Prompt';
 import { Selected } from './components/Selected';
 import { Separator } from './components/Separator';
-
-type ServerPrompt = Record<string, Prompt>;
-
-let prompts: Prompt[] = [];
-
-invoke('init')
-  .then((raw) => {
-    const serverPrompts = JSON.parse(raw as string) as readonly ServerPrompt[];
-
-    prompts = Object.entries(serverPrompts)
-      // @ts-ignore
-      .map<Prompt | undefined>(([key, p]) => ({ ...p, key }))
-      .filter(Boolean);
-  })
-  .catch(console.error);
+import { toClientPrompt } from './ServerPrompt';
 
 type Result = Record<string, Date | string>;
+type PolyEvent =
+  | React.KeyboardEvent<HTMLButtonElement>
+  | React.MouseEvent<HTMLButtonElement>;
 
 const App = () => {
-  console.log(prompts);
-
+  const ref = useRef<HTMLButtonElement | HTMLInputElement>(null);
+  const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [_, forceUpdate] = useReducer((x) => x + 1, 0);
   const [results, setResults] = useReducer(
     (prev: Result, next: Result) => ({ ...prev, ...next }),
     {},
   );
-  const ref = useRef<HTMLButtonElement | HTMLInputElement>(null);
+
   useEffect(() => {
-    setTimeout(() => {
-      forceUpdate();
-    }, 1000);
+    invoke('init').then(toClientPrompt).then(setPrompts).catch(console.error);
   }, []);
 
   useEffect(() => {
-    ref.current?.focus();
+    setTimeout(() => {
+      ref.current?.focus();
+    }, 100);
   }, [step]);
 
   const handleSubmit = (config: Prompt, value: Date | string) => {
@@ -53,12 +41,9 @@ const App = () => {
     setStep((c) => (c += 1));
   };
 
-  const run = (
-    e:
-      | React.KeyboardEvent<HTMLButtonElement>
-      | React.MouseEvent<HTMLButtonElement>,
-  ) => {
+  const run = (e: PolyEvent) => {
     if ('key' in e && e.key !== 'Enter') return;
+
     setLoading(true);
     setTimeout(() => {
       invoke('run', { args: JSON.stringify(results) })

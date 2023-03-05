@@ -3,24 +3,12 @@
     windows_subsystem = "windows"
 )]
 
-use std::{error::Error, path::PathBuf, process::Command};
+use flows::runner;
+use std::error::Error;
 
 #[tauri::command]
-fn run(args: &str) -> String {
-    let loc = std::env::var("FLOWS_SCRIPT_PATH").expect("");
-    let script = "test.ts";
-    let mut path = PathBuf::from(loc);
-    let mut run = std::env::current_dir().expect("Cannot");
-    run.pop();
-    run.push("runner");
-    run.push("run.ts");
-    path.push(script);
-    let mut child = Command::new(run)
-        .args([path.to_str().unwrap(), args])
-        .spawn()
-        .expect("failed to execute child");
-    let _ecode = child.wait().expect("failed to wait on child");
-    return "Shit".to_string();
+fn run(args: &str) -> Result<String, String> {
+    runner::run("test.ts", args)
 }
 
 fn create_window(app: &mut tauri::App) -> Result<(), Box<dyn Error>> {
@@ -29,24 +17,16 @@ fn create_window(app: &mut tauri::App) -> Result<(), Box<dyn Error>> {
 }
 
 #[tauri::command]
-fn init() -> String {
-    let loc = std::env::var("FLOWS_SCRIPT_PATH").expect("");
-    let script = "test.ts";
-    let mut path = PathBuf::from(loc);
-    path.push(script);
+fn get_scripts_cmd() -> Result<String, String> {
+    match runner::get_scripts() {
+        Ok(scripts) => Ok(scripts.join(",")),
+        Err(e) => Err(e.to_string()),
+    }
+}
 
-    let mut schema = std::env::current_dir().expect("Cannot");
-    schema.pop();
-    schema.push("runner");
-    schema.push("schema.ts");
-
-    let output = Command::new(schema)
-        .arg(path)
-        .output()
-        .expect("failed to execute child");
-    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
-
-    stdout
+#[tauri::command]
+fn init() -> Result<String, String> {
+    runner::get_schema("test.ts")
 }
 
 fn main() {
@@ -55,7 +35,7 @@ fn main() {
             create_window(app)?;
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![run, init])
+        .invoke_handler(tauri::generate_handler![run, init, get_scripts_cmd])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
