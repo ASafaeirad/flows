@@ -16,7 +16,6 @@ impl Config {
 
         let run_script = runner_dir.join("run.ts");
         let schema_script = runner_dir.join("schema.ts");
-        println!("{:#?}", schema_script);
 
         Config {
             script_path: PathBuf::from(script_path),

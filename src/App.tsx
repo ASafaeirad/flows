@@ -3,6 +3,7 @@ import { useState } from 'react';
 
 import { type Prompt } from './components/Prompt';
 import { Prompts } from './components/Prompts';
+import { type SelectItem } from './components/ScriptSelect';
 import { SelectScript } from './components/ScriptSelect';
 import { toClientPrompt } from './Dto';
 
@@ -12,8 +13,8 @@ const App = () => {
   const [state, setState] = useState<Mode>('script');
   const [prompts, setPrompts] = useState<Prompt[]>([]);
 
-  const selectScript = (script: string) => {
-    invoke('select_script', { name: script })
+  const selectScript = (script: SelectItem) => {
+    invoke('select_script', { name: script.value })
       .then(toClientPrompt)
       .then((p) => {
         setPrompts(p);

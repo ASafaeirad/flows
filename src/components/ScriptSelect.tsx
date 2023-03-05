@@ -5,12 +5,17 @@ import { getScripts } from '../Dto';
 import { Select } from './List';
 
 interface Props {
-  onSelect: (script: string) => void;
+  onSelect: (script: SelectItem) => void;
+}
+
+export interface SelectItem {
+  label: string;
+  value: string;
 }
 
 export const SelectScript = forwardRef<HTMLInputElement, Props>(
   ({ onSelect }, ref) => {
-    const [scripts, setScripts] = useState<string[]>([]);
+    const [scripts, setScripts] = useState<SelectItem[]>([]);
 
     useEffect(() => {
       invoke('get_scripts')
@@ -20,10 +25,11 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
     }, []);
 
     return (
-      <Select
+      <Select<SelectItem>
         label="Scripts"
         ref={ref as React.RefObject<HTMLInputElement>}
         items={scripts}
+        getLabel={(v) => v.label}
         onSelect={onSelect}
         placeholder="Select Script"
       />

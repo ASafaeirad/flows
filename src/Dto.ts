@@ -1,4 +1,4 @@
-import { isString } from '@fullstacksjs/toolbox';
+import { isString, toCapitalCase } from '@fullstacksjs/toolbox';
 
 import { type Prompt } from './components/Prompt';
 
@@ -12,8 +12,12 @@ export function toClientPrompt(raw: unknown): Prompt[] {
     .filter(Boolean);
 }
 
+const toClientLabel = (s: string) => {
+  return toCapitalCase(s).split('.')[0];
+};
+
 export function getScripts(x: unknown) {
   if (!isString(x)) throw Error('not string');
-  const next = x.split(',');
+  const next = x.split(',').map((s) => ({ label: toClientLabel(s), value: s }));
   return next;
 }
