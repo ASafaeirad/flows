@@ -15,11 +15,18 @@ type PolyEvent =
 interface Props {
   prompts: Prompt[];
   script: string;
+  onSuccess: (data: unknown) => void;
+  onError: (data: unknown) => void;
 }
 
 type Result = Record<string, Date | string>;
 
-export const Prompts = ({ prompts, script }: Props): JSX.Element => {
+export const Prompts = ({
+  prompts,
+  script,
+  onError,
+  onSuccess,
+}: Props): JSX.Element => {
   const ref = useRef<HTMLButtonElement | HTMLInputElement>(null);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -39,18 +46,19 @@ export const Prompts = ({ prompts, script }: Props): JSX.Element => {
     setStep((c) => (c += 1));
   };
 
-  const run = (e: PolyEvent) => {
+  const run = async (e: PolyEvent) => {
     if ('key' in e && e.key !== 'Enter') return;
-
     setLoading(true);
-    setTimeout(() => {
-      invoke('run', { script, args: JSON.stringify(results) })
-        .then(() => appWindow.hide())
-        .catch(console.error)
-        .finally(() => {
-          setLoading(false);
-        });
-    }, 100);
+
+    try {
+      const args = JSON.stringify(results);
+      const data = await invoke('run', { script, args });
+      await appWindow.hide();
+      onSuccess(data);
+    } catch (error) {
+      setLoading(false);
+      onError(error);
+    }
   };
 
   const currentPrompt = prompts[step];

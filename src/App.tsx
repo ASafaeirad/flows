@@ -22,12 +22,27 @@ const App = () => {
       .catch(console.error);
   };
 
+  const handleSuccess = (data: unknown) => {
+    console.log(data);
+    setScript(undefined);
+  };
+
+  const handleError = (error: unknown) => {
+    console.log(error);
+    setScript(undefined);
+  };
+
   return (
     <div className="flex w-96 flex-col gap-3 rounded-lg bg-dark-0 p-5 text-light-0">
       {isNull(script) ? (
         <SelectScript onSelect={selectScript} />
       ) : (
-        <Prompts script={script} prompts={prompts} />
+        <Prompts
+          onSuccess={handleSuccess}
+          onError={handleError}
+          script={script}
+          prompts={prompts}
+        />
       )}
     </div>
   );
