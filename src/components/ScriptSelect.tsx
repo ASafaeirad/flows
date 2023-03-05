@@ -1,7 +1,7 @@
-import { isString } from '@fullstacksjs/toolbox';
 import { invoke } from '@tauri-apps/api';
 import { forwardRef, useEffect, useState } from 'react';
 
+import { getScripts } from '../Dto';
 import { Select } from './List';
 
 interface Props {
@@ -14,11 +14,8 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
 
     useEffect(() => {
       invoke('get_scripts')
-        .then((x) => {
-          if (!isString(x)) throw Error('not string');
-          const next = x.split(',');
-          setScripts(next);
-        })
+        .then(getScripts)
+        .then(setScripts)
         .catch(console.error);
     }, []);
 

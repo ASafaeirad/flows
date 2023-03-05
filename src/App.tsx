@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { type Prompt } from './components/Prompt';
 import { Prompts } from './components/Prompts';
 import { SelectScript } from './components/ScriptSelect';
-import { toClientPrompt } from './ServerPrompt';
+import { toClientPrompt } from './Dto';
 
 type Mode = 'prompt' | 'script';
 

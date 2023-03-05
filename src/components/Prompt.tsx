@@ -10,8 +10,8 @@ interface PromptProps {
 }
 
 type PromptAttributes<T> =
-  | { required: false; defaultValue?: T }
-  | { required: true };
+  | { required?: false; defaultValue?: T }
+  | { required?: true };
 
 export type SelectPrompt = PromptAttributes<string> &
   PromptProps & {
