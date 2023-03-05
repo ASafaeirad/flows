@@ -24,12 +24,12 @@ export type DatePrompt = PromptAttributes<Date> &
     type: 'Date';
   };
 
-export type InputPrompt = PromptAttributes<string> &
+export type TextPrompt = PromptAttributes<string> &
   PromptProps & {
     type: 'Text';
   };
 
-export type Prompt = DatePrompt | InputPrompt | SelectPrompt;
+export type Prompt = DatePrompt | SelectPrompt | TextPrompt;
 
 type Props = Prompt & {
   onSelect: (e: Date | string) => void;
