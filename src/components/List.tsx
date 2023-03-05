@@ -86,5 +86,5 @@ export const Select = forwardRef<HTMLInputElement, Props>(
     );
   },
 ) as <T>(
-  props: Props<T> & { ref: React.LegacyRef<HTMLInputElement> },
+  props: Props<T> & { ref?: React.LegacyRef<HTMLInputElement> },
 ) => JSX.Element;

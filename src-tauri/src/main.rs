@@ -17,7 +17,7 @@ fn create_window(app: &mut tauri::App) -> Result<(), Box<dyn Error>> {
 }
 
 #[tauri::command]
-fn get_scripts_cmd() -> Result<String, String> {
+fn get_scripts() -> Result<String, String> {
     match runner::get_scripts() {
         Ok(scripts) => Ok(scripts.join(",")),
         Err(e) => Err(e.to_string()),
@@ -25,8 +25,8 @@ fn get_scripts_cmd() -> Result<String, String> {
 }
 
 #[tauri::command]
-fn init() -> Result<String, String> {
-    runner::get_schema("test.ts")
+fn select_script(name: &str) -> Result<String, String> {
+    runner::get_schema(name)
 }
 
 fn main() {
@@ -35,7 +35,7 @@ fn main() {
             create_window(app)?;
             Ok(())
         })
-        .invoke_handler(tauri::generate_handler![run, init, get_scripts_cmd])
+        .invoke_handler(tauri::generate_handler![run, select_script, get_scripts])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }

@@ -1,11 +1,12 @@
 /* eslint-disable fp/no-let */
 
-import { isNull } from '@fullstacksjs/toolbox';
+import { isNull, isString } from '@fullstacksjs/toolbox';
 import { invoke } from '@tauri-apps/api/tauri';
 import { appWindow } from '@tauri-apps/api/window';
 import { Fragment, useEffect, useReducer, useRef, useState } from 'react';
 
 import { Button } from './components/Button';
+import { Select } from './components/List';
 import { type Prompt, PromptInput } from './components/Prompt';
 import { Selected } from './components/Selected';
 import { Separator } from './components/Separator';
@@ -18,6 +19,8 @@ type PolyEvent =
 
 const App = () => {
   const ref = useRef<HTMLButtonElement | HTMLInputElement>(null);
+  const [state, setState] = useState<'prompt' | 'script'>('script');
+  const [scripts, setScripts] = useState<string[]>([]);
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -27,7 +30,13 @@ const App = () => {
   );
 
   useEffect(() => {
-    invoke('init').then(toClientPrompt).then(setPrompts).catch(console.error);
+    invoke('get_scripts')
+      .then((x) => {
+        if (!isString(x)) throw Error('not string');
+        const next = x.split(',');
+        setScripts(next);
+      })
+      .catch(console.error);
   }, []);
 
   useEffect(() => {
@@ -57,33 +66,54 @@ const App = () => {
 
   const currentPrompt = prompts[step];
 
+  const selectScript = (script: string) => {
+    invoke('select_script', { name: script })
+      .then(toClientPrompt)
+      .then((p) => {
+        setPrompts(p);
+        setState('prompt');
+      })
+      .catch(console.error);
+  };
+
   return (
     <div className="flex w-96 flex-col gap-3 rounded-lg bg-dark-0 p-5 text-light-0">
-      {prompts.map((prompt, i) => {
-        const value = results[prompt.key];
-        const haveResult = i < step && !isNull(value);
-        return haveResult ? (
-          <Fragment key={prompt.key}>
-            <Selected label={prompt.label} value={value} />
-            <Separator />
-          </Fragment>
-        ) : null;
-      })}
-
-      {!isNull(currentPrompt) ? (
-        <PromptInput
+      {state === 'script' ? (
+        <Select
+          label="Scripts"
           ref={ref as React.RefObject<HTMLInputElement>}
-          {...currentPrompt}
-          onSelect={(e) => handleSubmit(currentPrompt, e)}
+          items={scripts}
+          onSelect={selectScript}
         />
       ) : (
-        <Button
-          ref={ref as React.RefObject<HTMLButtonElement>}
-          onKeyDown={run}
-          onClick={run}
-        >
-          {loading ? '...' : 'Run'}
-        </Button>
+        <>
+          {prompts.map((prompt, i) => {
+            const value = results[prompt.key];
+            const haveResult = i < step && !isNull(value);
+            return haveResult ? (
+              <Fragment key={prompt.key}>
+                <Selected label={prompt.label} value={value} />
+                <Separator />
+              </Fragment>
+            ) : null;
+          })}
+
+          {!isNull(currentPrompt) ? (
+            <PromptInput
+              ref={ref as React.RefObject<HTMLInputElement>}
+              {...currentPrompt}
+              onSelect={(e) => handleSubmit(currentPrompt, e)}
+            />
+          ) : (
+            <Button
+              ref={ref as React.RefObject<HTMLButtonElement>}
+              onKeyDown={run}
+              onClick={run}
+            >
+              {loading ? '...' : 'Run'}
+            </Button>
+          )}
+        </>
       )}
     </div>
   );
