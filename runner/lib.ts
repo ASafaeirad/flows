@@ -12,7 +12,7 @@ export const stderr = (message: string) => {
 
 export const stdout = (message: string) => {
   const errorMessage = encoder.encode(message + '\n');
-  Deno.stderr.writeSync(errorMessage);
+  Deno.stdout.writeSync(errorMessage);
 };
 
 const isScript = (module: Record<string, unknown>): module is Script => {

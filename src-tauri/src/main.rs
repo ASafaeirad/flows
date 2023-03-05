@@ -5,16 +5,18 @@
 
 use std::{error::Error, path::PathBuf, process::Command};
 
-use flows::parser::get_prompts;
-
 #[tauri::command]
 fn run(args: &str) -> String {
     let loc = std::env::var("FLOWS_SCRIPT_PATH").expect("");
-    let script = "file1.ts";
+    let script = "test.ts";
     let mut path = PathBuf::from(loc);
+    let mut run = std::env::current_dir().expect("Cannot");
+    run.pop();
+    run.push("runner");
+    run.push("run.ts");
     path.push(script);
-    let mut child = Command::new(path)
-        .arg(args)
+    let mut child = Command::new(run)
+        .args([path.to_str().unwrap(), args])
         .spawn()
         .expect("failed to execute child");
     let _ecode = child.wait().expect("failed to wait on child");
@@ -29,11 +31,22 @@ fn create_window(app: &mut tauri::App) -> Result<(), Box<dyn Error>> {
 #[tauri::command]
 fn init() -> String {
     let loc = std::env::var("FLOWS_SCRIPT_PATH").expect("");
-    let script = "file1.ts";
+    let script = "test.ts";
     let mut path = PathBuf::from(loc);
     path.push(script);
-    let prompts = get_prompts(path.as_path());
-    prompts
+
+    let mut schema = std::env::current_dir().expect("Cannot");
+    schema.pop();
+    schema.push("runner");
+    schema.push("schema.ts");
+
+    let output = Command::new(schema)
+        .arg(path)
+        .output()
+        .expect("failed to execute child");
+    let stdout = String::from_utf8_lossy(&output.stdout).to_string();
+
+    stdout
 }
 
 fn main() {
