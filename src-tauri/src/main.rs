@@ -7,8 +7,8 @@ use flows::runner;
 use std::error::Error;
 
 #[tauri::command]
-fn run(args: &str) -> Result<String, String> {
-    runner::run("test.ts", args)
+fn run(script: &str, args: &str) -> Result<String, String> {
+    runner::run(script, args)
 }
 
 fn create_window(app: &mut tauri::App) -> Result<(), Box<dyn Error>> {

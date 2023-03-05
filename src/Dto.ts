@@ -1,6 +1,7 @@
 import { isString, toCapitalCase } from '@fullstacksjs/toolbox';
 
 import { type Prompt } from './components/Prompt';
+import { type SelectItem } from './components/ScriptSelect';
 
 type ServerPrompt = Record<string, Prompt>;
 
@@ -13,10 +14,10 @@ export function toClientPrompt(raw: unknown): Prompt[] {
 }
 
 const toClientLabel = (s: string) => {
-  return toCapitalCase(s).split('.')[0];
+  return toCapitalCase(s).split('.')[0] ?? 'Missing';
 };
 
-export function getScripts(x: unknown) {
+export function getScripts(x: unknown): SelectItem[] {
   if (!isString(x)) throw Error('not string');
   const next = x.split(',').map((s) => ({ label: toClientLabel(s), value: s }));
   return next;

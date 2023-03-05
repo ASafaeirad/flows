@@ -2,10 +2,11 @@ import { isEmpty } from '@fullstacksjs/toolbox';
 import { forwardRef, Fragment, useState } from 'react';
 
 import { useFilter } from '../hooks';
+import { type InputProps } from './Input';
 import { Input } from './Input';
 import { Separator } from './Separator';
 
-interface Props<T = string> {
+interface Props<T = string> extends Omit<InputProps, 'onSelect' | 'ref'> {
   items: T[];
   label: string;
   placeholder?: string;
@@ -16,7 +17,15 @@ interface Props<T = string> {
 
 export const Select = forwardRef<HTMLInputElement, Props>(
   (
-    { items, label, placeholder, onSelect, getLabel = String, getId = String },
+    {
+      items,
+      label,
+      placeholder,
+      onSelect,
+      getLabel = String,
+      getId = String,
+      ...props
+    },
     ref,
   ) => {
     const [value, setValue] = useState('');
@@ -57,6 +66,7 @@ export const Select = forwardRef<HTMLInputElement, Props>(
     return (
       <div className="flex flex-col gap-3">
         <Input
+          {...props}
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           value={value}

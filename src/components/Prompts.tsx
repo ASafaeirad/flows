@@ -14,11 +14,12 @@ type PolyEvent =
 
 interface Props {
   prompts: Prompt[];
+  script: string;
 }
 
 type Result = Record<string, Date | string>;
 
-export const Prompts = ({ prompts }: Props): JSX.Element => {
+export const Prompts = ({ prompts, script }: Props): JSX.Element => {
   const ref = useRef<HTMLButtonElement | HTMLInputElement>(null);
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -43,7 +44,7 @@ export const Prompts = ({ prompts }: Props): JSX.Element => {
 
     setLoading(true);
     setTimeout(() => {
-      invoke('run', { args: JSON.stringify(results) })
+      invoke('run', { script, args: JSON.stringify(results) })
         .then(() => appWindow.hide())
         .catch(console.error)
         .finally(() => {

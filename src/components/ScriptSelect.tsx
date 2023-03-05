@@ -27,7 +27,8 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
     return (
       <Select<SelectItem>
         label="Scripts"
-        ref={ref as React.RefObject<HTMLInputElement>}
+        autoFocus
+        ref={ref}
         items={scripts}
         getLabel={(v) => v.label}
         onSelect={onSelect}

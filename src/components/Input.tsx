@@ -2,11 +2,11 @@ import { forwardRef } from 'react';
 
 type InputAttributes = Omit<JSX.IntrinsicElements['input'], 'onSelect'>;
 
-interface Props extends InputAttributes {
+export interface InputProps extends InputAttributes {
   onSelect?: (t: string) => void;
 }
 
-export const Input = forwardRef<HTMLInputElement, Props>(
+export const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ onSelect, ...props }, ref) => {
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {

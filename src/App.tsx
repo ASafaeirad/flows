@@ -1,3 +1,4 @@
+import { isNull } from '@fullstacksjs/toolbox';
 import { invoke } from '@tauri-apps/api';
 import { useState } from 'react';
 
@@ -7,28 +8,26 @@ import { type SelectItem } from './components/ScriptSelect';
 import { SelectScript } from './components/ScriptSelect';
 import { toClientPrompt } from './Dto';
 
-type Mode = 'prompt' | 'script';
-
 const App = () => {
-  const [state, setState] = useState<Mode>('script');
+  const [script, setScript] = useState<string | undefined>();
   const [prompts, setPrompts] = useState<Prompt[]>([]);
 
-  const selectScript = (script: SelectItem) => {
-    invoke('select_script', { name: script.value })
+  const selectScript = ({ value }: SelectItem) => {
+    invoke('select_script', { name: value })
       .then(toClientPrompt)
       .then((p) => {
         setPrompts(p);
-        setState('prompt');
+        setScript(value);
       })
       .catch(console.error);
   };
 
   return (
     <div className="flex w-96 flex-col gap-3 rounded-lg bg-dark-0 p-5 text-light-0">
-      {state === 'script' ? (
+      {isNull(script) ? (
         <SelectScript onSelect={selectScript} />
       ) : (
-        <Prompts prompts={prompts} />
+        <Prompts script={script} prompts={prompts} />
       )}
     </div>
   );
