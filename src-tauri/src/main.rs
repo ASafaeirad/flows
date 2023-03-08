@@ -3,7 +3,7 @@
     windows_subsystem = "windows"
 )]
 
-use flows::runner;
+use flows::{runner, config::Config};
 use std::error::Error;
 
 #[tauri::command]
@@ -30,6 +30,8 @@ fn select_script(name: &str) -> Result<String, String> {
 }
 
 fn main() {
+    let config = Config::new();
+    config.validate();
     tauri::Builder::default()
         .setup(|app| {
             create_window(app)?;
