@@ -1,6 +1,17 @@
-use crate::runner;
+use std::process::Command;
+
+use crate::{config::Config, utils};
 
 #[tauri::command]
 pub fn run(script: &str, args: &str) -> Result<String, String> {
-    runner::run(script, args)
+    let config = Config::new();
+    let script = config.script_path.join(script);
+
+    let output = Command::new(config.run_script)
+        .arg(script)
+        .arg(args)
+        .output()
+        .expect("Cannot run the \"run.ts\" command");
+
+    utils::output_to_result(output)
 }

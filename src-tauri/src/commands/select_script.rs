@@ -1,6 +1,15 @@
-use crate::runner;
+use crate::{config::Config, utils};
+use std::process::Command;
 
 #[tauri::command]
 pub fn select_script(name: &str) -> Result<String, String> {
-    runner::get_schema(name)
+    let config = Config::new();
+    let script = config.script_path.join(name);
+
+    let output = Command::new(config.schema_script)
+        .arg(script)
+        .output()
+        .expect("Cannot run the \"schema.ts\" command");
+
+    utils::output_to_result(output)
 }

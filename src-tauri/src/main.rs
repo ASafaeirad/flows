@@ -22,7 +22,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             commands::run::run,
             commands::select_script::select_script,
-            commands::get_scripts::get_scripts
+            commands::get_scripts::get_scripts,
+            commands::create_script::create_script
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
