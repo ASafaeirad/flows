@@ -17,8 +17,8 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
   ({ onSelect }, ref) => {
     const [scripts, setScripts] = useState<SelectItem[]>([]);
 
-    const createScript = (item: string) => {
-      console.log(item);
+    const createScript = (name: string) => {
+      invoke('create_script', { name }).then(console.log).catch(console.error);
     };
 
     useEffect(() => {
