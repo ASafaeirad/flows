@@ -17,6 +17,10 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
   ({ onSelect }, ref) => {
     const [scripts, setScripts] = useState<SelectItem[]>([]);
 
+    const createScript = (item: string) => {
+      console.log(item);
+    };
+
     useEffect(() => {
       invoke('get_scripts')
         .then(getScripts)
@@ -26,6 +30,7 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
 
     return (
       <Select<SelectItem>
+        onNewEntry={createScript}
         label="Scripts"
         autoFocus
         ref={ref}

@@ -1,7 +1,7 @@
 import { isEmpty } from '@fullstacksjs/toolbox';
-import { forwardRef, Fragment, useState } from 'react';
+import { forwardRef, Fragment, useRef, useState } from 'react';
 
-import { useFilter } from '../hooks';
+import { useFilter, useForkRef } from '../hooks';
 import { type InputProps } from './Input';
 import { Input } from './Input';
 import { Separator } from './Separator';
@@ -13,6 +13,7 @@ interface Props<T = string> extends Omit<InputProps, 'onSelect' | 'ref'> {
   onSelect?: (item: T) => void;
   getLabel?: (x: T) => string;
   getId?: (x: T) => string;
+  onNewEntry?: (newScript: string) => void;
 }
 
 export const Select = forwardRef<HTMLInputElement, Props>(
@@ -24,16 +25,22 @@ export const Select = forwardRef<HTMLInputElement, Props>(
       onSelect,
       getLabel = String,
       getId = String,
+      onNewEntry,
       ...props
     },
     ref,
   ) => {
     const [value, setValue] = useState('');
+    const inputRef = useRef<HTMLInputElement>(null);
     const { filteredItems, selectedIndex, setSelected } = useFilter(
       items,
       value,
       getLabel,
     );
+
+    const handleRef = useForkRef(ref, inputRef);
+    const isNewItem =
+      isEmpty(filteredItems) && onNewEntry && inputRef.current?.value;
 
     const handleKeyDown = (e: KeyboardEvent | React.KeyboardEvent) => {
       if (e.key === 'ArrowDown') {
@@ -58,6 +65,12 @@ export const Select = forwardRef<HTMLInputElement, Props>(
 
       if (e.key === 'Enter') {
         e.preventDefault();
+
+        if (isNewItem) {
+          onNewEntry(inputRef.current.value);
+          return;
+        }
+
         const item = filteredItems[selectedIndex];
         if (item) onSelect?.(item);
       }
@@ -71,12 +84,19 @@ export const Select = forwardRef<HTMLInputElement, Props>(
           placeholder={placeholder}
           value={value}
           onChange={(e) => setValue(e.target.value)}
-          ref={ref}
+          ref={handleRef}
         />
         <div className="bg-bg-700 flex flex-col gap-2 rounded border border-border py-3 px-5">
           <div className="text-sm text-light-muted">{label}</div>
           {isEmpty(filteredItems) ? (
-            <div className="text-light-muted">No Item</div>
+            isNewItem ? (
+              <div className="text-light-muted">
+                Add{' '}
+                <span className="text-accent-0">{inputRef.current.value}</span>
+              </div>
+            ) : (
+              <div className="text-light-muted">No Item</div>
+            )
           ) : (
             filteredItems.map((item, index) => (
               <Fragment key={getId(item)}>
