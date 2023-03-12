@@ -2,6 +2,7 @@ import { invoke } from '@tauri-apps/api';
 import { forwardRef, useEffect, useState } from 'react';
 
 import { toScripts } from '../Dto';
+import { DeleteConfirm } from './DeleteConfirm';
 import { Select } from './List';
 
 interface Props {
@@ -16,6 +17,7 @@ export interface SelectItem {
 export const SelectScript = forwardRef<HTMLInputElement, Props>(
   ({ onSelect }, ref) => {
     const [scripts, setScripts] = useState<SelectItem[]>([]);
+    const [scriptToDelete, setScriptToDelete] = useState<string>();
 
     const syncScripts = () => {
       invoke('get_scripts')
@@ -34,15 +36,30 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
         .catch(console.error);
     };
 
-    const deleteScript = (item: SelectItem) => {
-      console.log(item);
+    const deleteScript = () => {
+      invoke('delete_script', { name: scriptToDelete })
+        .then(syncScripts)
+        .catch(console.error);
+      setScriptToDelete(undefined);
+    };
+
+    const handleDelete = (item: SelectItem) => {
+      setScriptToDelete(item.value);
+    };
+
+    const cancel = () => {
+      setScriptToDelete(undefined);
     };
 
     useEffect(() => {
       syncScripts();
     }, []);
 
-    return (
+    return scriptToDelete ? (
+      <DeleteConfirm onCancel={cancel} onConfirm={deleteScript}>
+        Do you want to delete &quot;{scriptToDelete}&quot;?
+      </DeleteConfirm>
+    ) : (
       <Select<SelectItem>
         onNewEntry={createScript}
         onEdit={editScript}
@@ -52,7 +69,7 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
         items={scripts}
         getLabel={(v) => v.label}
         onSelect={onSelect}
-        onDelete={deleteScript}
+        onDelete={handleDelete}
         placeholder="Select Script"
       />
     );
