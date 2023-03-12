@@ -1,7 +1,7 @@
 import { invoke } from '@tauri-apps/api';
 import { forwardRef, useEffect, useState } from 'react';
 
-import { getScripts } from '../Dto';
+import { toScripts } from '../Dto';
 import { Select } from './List';
 
 interface Props {
@@ -17,8 +17,15 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
   ({ onSelect }, ref) => {
     const [scripts, setScripts] = useState<SelectItem[]>([]);
 
+    const syncScripts = () => {
+      invoke('get_scripts')
+        .then(toScripts)
+        .then(setScripts)
+        .catch(console.error);
+    };
+
     const createScript = (name: string) => {
-      invoke('create_script', { name }).then(console.log).catch(console.error);
+      invoke('create_script', { name }).then(syncScripts).catch(console.error);
     };
 
     const editScript = (item: SelectItem) => {
@@ -27,11 +34,8 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
         .catch(console.error);
     };
 
-    const syncScripts = () => {
-      invoke('get_scripts')
-        .then(getScripts)
-        .then(setScripts)
-        .catch(console.error);
+    const deleteScript = (item: SelectItem) => {
+      console.log(item);
     };
 
     useEffect(() => {
@@ -48,6 +52,7 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
         items={scripts}
         getLabel={(v) => v.label}
         onSelect={onSelect}
+        onDelete={deleteScript}
         placeholder="Select Script"
       />
     );

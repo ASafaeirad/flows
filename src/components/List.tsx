@@ -15,6 +15,7 @@ interface Props<T = string> extends Omit<InputProps, 'onSelect' | 'ref'> {
   getId?: (x: T) => string;
   onNewEntry?: (newScript: string) => void;
   onEdit?: (x: T) => void;
+  onDelete?: (x: T) => void;
 }
 
 export const Select = forwardRef<HTMLInputElement, Props>(
@@ -28,6 +29,7 @@ export const Select = forwardRef<HTMLInputElement, Props>(
       getId = String,
       onNewEntry,
       onEdit,
+      onDelete,
       ...props
     },
     ref,
@@ -44,37 +46,39 @@ export const Select = forwardRef<HTMLInputElement, Props>(
     const isNewItem =
       isEmpty(filteredItems) && onNewEntry && inputRef.current?.value;
 
+    // eslint-disable-next-line complexity
     const handleKeyDown = (e: KeyboardEvent | React.KeyboardEvent) => {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        setSelected((s) => s + 1);
-      }
+      const key = e.key as KeyboardEventKey;
+      const handledKeys: KeyboardEventKey[] = [
+        'ArrowDown',
+        'ArrowUp',
+        'j',
+        'k',
+        'e',
+        'Enter',
+      ];
 
-      if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        setSelected((s) => s - 1);
-      }
+      if (handledKeys.includes(key)) e.preventDefault();
 
-      if (e.key === 'j' && e.ctrlKey) {
-        e.preventDefault();
-        setSelected((s) => s + 1);
-      }
+      if (key === 'ArrowDown') setSelected((s) => s + 1);
 
-      if (e.key === 'k' && e.ctrlKey) {
-        e.preventDefault();
-        setSelected((s) => s - 1);
-      }
+      if (key === 'ArrowUp') setSelected((s) => s - 1);
 
-      if (e.key === 'e' && e.ctrlKey) {
-        e.preventDefault();
+      if (key === 'j' && e.ctrlKey) setSelected((s) => s + 1);
 
+      if (key === 'k' && e.ctrlKey) setSelected((s) => s - 1);
+
+      if (key === 'e' && e.ctrlKey) {
         const item = filteredItems[selectedIndex];
         if (item) onEdit?.(item);
       }
 
-      if (e.key === 'Enter') {
-        e.preventDefault();
+      if (key === 'd' && e.ctrlKey) {
+        const item = filteredItems[selectedIndex];
+        if (item) onDelete?.(item);
+      }
 
+      if (key === 'Enter') {
         if (isNewItem) {
           onNewEntry(inputRef.current.value);
           return;

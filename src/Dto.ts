@@ -17,7 +17,7 @@ const toClientLabel = (s: string) => {
   return toCapitalCase(s).split('.')[0] ?? 'Missing';
 };
 
-export function getScripts(x: unknown): SelectItem[] {
+export function toScripts(x: unknown): SelectItem[] {
   if (!isString(x)) throw Error('not string');
 
   const next = x
