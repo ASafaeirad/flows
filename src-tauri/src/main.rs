@@ -23,7 +23,8 @@ fn main() {
             commands::run::run,
             commands::select_script::select_script,
             commands::get_scripts::get_scripts,
-            commands::create_script::create_script
+            commands::create_script::create_script,
+            commands::edit_script::edit_script
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
