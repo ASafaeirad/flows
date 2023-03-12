@@ -1,4 +1,9 @@
-use std::{path::Path, process::{Command, Stdio}, io::ErrorKind};
+use std::{
+    io::{BufRead, BufReader},
+    path::Path,
+    process::Command,
+    thread,
+};
 
 struct EditorCmd {
     editor: String,
@@ -47,32 +52,27 @@ impl Default for Editor {
 }
 
 impl Editor {
-    pub fn edit_file<P: AsRef<Path>>(self, file: P) -> std::io::Result<()> {
+    pub fn edit_file<P: AsRef<Path>, T: 'static + Send + Fn(&str)>(self, file: P, cb: T) -> std::io::Result<()> {
         let EditorCmd { editor, args } = self.into();
         println!("{:#?}", file.as_ref());
 
-        let status = Command::new(&editor)
+        let child = Command::new(&editor)
             .args(&args)
             .arg(file.as_ref())
-            .stdin(Stdio::inherit())
-            .stdout(Stdio::inherit())
-            .stderr(Stdio::inherit())
-            .output()?
-            .status;
+            .spawn()?;
 
-        if status.success() {
-            Ok(())
-        } else {
-            let full_command = if args.is_empty() {
-                format!("{} {}", editor, file.as_ref().to_string_lossy())
-            } else {
-                format!("{} {:?} {}", editor, args, file.as_ref().to_string_lossy())
-            };
-
-            Err(std::io::Error::new(
-                ErrorKind::Other,
-                format!("editor '{}' exited with error: {}", full_command, status),
-            ))
-        }
+        thread::spawn(move || {
+            let mut f = BufReader::new(child.stdout.unwrap());
+            loop {
+                let mut buf = String::new();
+                match f.read_line(&mut buf) {
+                    Ok(_) => {
+                        cb(buf.as_str());
+                    }
+                    Err(e) => println!("an error!: {:?}", e),
+                }
+            }
+        });
+        Ok(())
     }
 }
