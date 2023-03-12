@@ -49,42 +49,49 @@ export const Select = forwardRef<HTMLInputElement, Props>(
     // eslint-disable-next-line complexity
     const handleKeyDown = (e: KeyboardEvent | React.KeyboardEvent) => {
       const key = e.key as KeyboardEventKey;
-      const handledKeys: KeyboardEventKey[] = [
-        'ArrowDown',
-        'ArrowUp',
-        'j',
-        'k',
-        'e',
-        'Enter',
-      ];
 
-      if (handledKeys.includes(key)) e.preventDefault();
+      if (key === 'ArrowDown') {
+        e.preventDefault();
+        setSelected((s) => s + 1);
+      }
 
-      if (key === 'ArrowDown') setSelected((s) => s + 1);
+      if (key === 'ArrowUp') {
+        e.preventDefault();
+        setSelected((s) => s - 1);
+      }
 
-      if (key === 'ArrowUp') setSelected((s) => s - 1);
+      if (key === 'j' && e.ctrlKey) {
+        e.preventDefault();
+        setSelected((s) => s + 1);
+      }
 
-      if (key === 'j' && e.ctrlKey) setSelected((s) => s + 1);
-
-      if (key === 'k' && e.ctrlKey) setSelected((s) => s - 1);
+      if (key === 'k' && e.ctrlKey) {
+        e.preventDefault();
+        setSelected((s) => s - 1);
+      }
 
       if (key === 'e' && e.ctrlKey) {
+        e.preventDefault();
         const item = filteredItems[selectedIndex];
         if (item) onEdit?.(item);
       }
 
       if (key === 'd' && e.ctrlKey) {
+        e.preventDefault();
         const item = filteredItems[selectedIndex];
         if (item) onDelete?.(item);
       }
 
       if (key === 'Enter') {
+        e.preventDefault();
+
         if (isNewItem) {
           onNewEntry(inputRef.current.value);
           return;
         }
 
         const item = filteredItems[selectedIndex];
+        console.log(item);
         if (item) onSelect?.(item);
       }
     };
