@@ -4,6 +4,7 @@
     "*.js",
     "*.ts",
     "*.csj",
+    "runner/*.ts",
     "src/**/*.tsx",
     "src/**/*.ts"
   ]

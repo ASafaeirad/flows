@@ -9,4 +9,12 @@ module.exports = init({
     },
   },
   root: true,
+  overrides: [
+    {
+      files: ['./runner/*.ts'],
+      rules: {
+        'import/extensions': 'off',
+      },
+    },
+  ],
 });
