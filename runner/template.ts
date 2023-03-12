@@ -1,4 +1,4 @@
-import { prompt, type Values } from './.flows/types.ts';
+import { prompt, type Values } from './.flows/type.ts';
 
 export const SCHEMA = {};
 

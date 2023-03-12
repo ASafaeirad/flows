@@ -8,6 +8,7 @@ pub struct Config {
     pub script_path: PathBuf,
     pub run_script: PathBuf,
     pub schema_script: PathBuf,
+    pub template_script: PathBuf,
     pub editor: Editor,
 }
 
@@ -21,6 +22,7 @@ impl Config {
 
         let run_script = runner_dir.join("run.ts");
         let schema_script = runner_dir.join("schema.ts");
+        let template_script = runner_dir.join("template.ts");
         let editor = Editor::try_from(editor_name).unwrap_or_default();
 
         Config {
@@ -28,6 +30,7 @@ impl Config {
             run_script,
             schema_script,
             editor,
+            template_script,
         }
     }
 
