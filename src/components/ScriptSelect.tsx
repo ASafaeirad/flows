@@ -21,6 +21,12 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
       invoke('create_script', { name }).then(console.log).catch(console.error);
     };
 
+    const editScript = (item: SelectItem) => {
+      invoke('edit_script', { name: item.value })
+        .then(console.log)
+        .catch(console.error);
+    };
+
     useEffect(() => {
       invoke('get_scripts')
         .then(getScripts)
@@ -31,6 +37,7 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
     return (
       <Select<SelectItem>
         onNewEntry={createScript}
+        onEdit={editScript}
         label="Scripts"
         autoFocus
         ref={ref}

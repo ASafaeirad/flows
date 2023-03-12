@@ -14,6 +14,7 @@ interface Props<T = string> extends Omit<InputProps, 'onSelect' | 'ref'> {
   getLabel?: (x: T) => string;
   getId?: (x: T) => string;
   onNewEntry?: (newScript: string) => void;
+  onEdit?: (x: T) => void;
 }
 
 export const Select = forwardRef<HTMLInputElement, Props>(
@@ -26,6 +27,7 @@ export const Select = forwardRef<HTMLInputElement, Props>(
       getLabel = String,
       getId = String,
       onNewEntry,
+      onEdit,
       ...props
     },
     ref,
@@ -61,6 +63,13 @@ export const Select = forwardRef<HTMLInputElement, Props>(
       if (e.key === 'k' && e.ctrlKey) {
         e.preventDefault();
         setSelected((s) => s - 1);
+      }
+
+      if (e.key === 'e' && e.ctrlKey) {
+        e.preventDefault();
+
+        const item = filteredItems[selectedIndex];
+        if (item) onEdit?.(item);
       }
 
       if (e.key === 'Enter') {
