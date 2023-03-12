@@ -19,6 +19,11 @@ const toClientLabel = (s: string) => {
 
 export function getScripts(x: unknown): SelectItem[] {
   if (!isString(x)) throw Error('not string');
-  const next = x.split(',').map((s) => ({ label: toClientLabel(s), value: s }));
+
+  const next = x
+    .split(',')
+    .filter(Boolean)
+    .map((s) => ({ label: toClientLabel(s), value: s }));
+
   return next;
 }

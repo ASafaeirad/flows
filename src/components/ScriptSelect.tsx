@@ -27,11 +27,15 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
         .catch(console.error);
     };
 
-    useEffect(() => {
+    const syncScripts = () => {
       invoke('get_scripts')
         .then(getScripts)
         .then(setScripts)
         .catch(console.error);
+    };
+
+    useEffect(() => {
+      syncScripts();
     }, []);
 
     return (
