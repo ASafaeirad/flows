@@ -5,9 +5,19 @@
 
 use flows::{self, commands, config::Config};
 use std::error::Error;
+use tauri::LogicalSize;
 
 fn create_window(app: &mut tauri::App) -> Result<(), Box<dyn Error>> {
-    tauri::WindowBuilder::new(app, "local", tauri::WindowUrl::App("index.html".into())).build()?;
+    let window =
+        tauri::WindowBuilder::new(app, "local", tauri::WindowUrl::App("index.html".into()))
+            .build()?;
+    window.set_size(LogicalSize {
+        width: 1,
+        height: 1,
+    })?;
+    window.center()?;
+    window.set_always_on_top(true)?;
+    window.set_resizable(true)?;
     Ok(())
 }
 
