@@ -34,7 +34,7 @@ impl Into<EditorCmd> for Editor {
     fn into(self) -> EditorCmd {
         match self {
             Editor::Vim(args) => EditorCmd {
-                editor: "vim".to_owned(),
+                editor: "nvim".to_owned(),
                 args,
             },
             Editor::VSCode(args) => EditorCmd {
@@ -52,9 +52,12 @@ impl Default for Editor {
 }
 
 impl Editor {
-    pub fn edit_file<P: AsRef<Path>, T: 'static + Send + Fn(&str)>(self, file: P, cb: T) -> std::io::Result<()> {
+    pub fn edit_file<P: AsRef<Path>, T: 'static + Send + Fn(&str)>(
+        self,
+        file: P,
+        cb: T,
+    ) -> std::io::Result<()> {
         let EditorCmd { editor, args } = self.into();
-        println!("{:#?}", file.as_ref());
 
         let child = Command::new(&editor)
             .args(&args)
@@ -62,14 +65,17 @@ impl Editor {
             .spawn()?;
 
         thread::spawn(move || {
-            let mut f = BufReader::new(child.stdout.unwrap());
-            loop {
-                let mut buf = String::new();
-                match f.read_line(&mut buf) {
-                    Ok(_) => {
-                        cb(buf.as_str());
+            let f = child.stdout;
+            if let Some(child) = f {
+                let mut reader = BufReader::new(child);
+                loop {
+                    let mut buf = String::new();
+                    match reader.read_line(&mut buf) {
+                        Ok(_) => {
+                            cb(buf.as_str());
+                        }
+                        Err(e) => println!("an error!: {:?}", e),
                     }
-                    Err(e) => println!("an error!: {:?}", e),
                 }
             }
         });

@@ -31,9 +31,7 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
     };
 
     const editScript = (item: SelectItem) => {
-      invoke('edit_script', { name: item.value })
-        .then(console.log)
-        .catch(console.error);
+      invoke('edit_script', { name: item.value }).catch(console.error);
     };
 
     const deleteScript = () => {

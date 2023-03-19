@@ -20,8 +20,7 @@
         "all": true
       },
       "shell": {
-        "all": false,
-        "open": true
+        "all": false
       }
     },
     "bundle": {

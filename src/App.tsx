@@ -2,6 +2,7 @@ import { isNull } from '@fullstacksjs/toolbox';
 import { invoke } from '@tauri-apps/api';
 import { appWindow, LogicalSize } from '@tauri-apps/api/window';
 import { useCallback, useEffect, useState } from 'react';
+import { useEventListener } from 'usehooks-ts';
 
 import { type Prompt } from './components/Prompt';
 import { Prompts } from './components/Prompts';
@@ -14,6 +15,15 @@ const App = () => {
   const [script, setScript] = useState<string | undefined>();
   const [prompts, setPrompts] = useState<Prompt[]>([]);
 
+  useEventListener('keydown', (e) => {
+    const key = e.key as KeyboardEventKey;
+
+    if (key === 'E' && e.shiftKey && e.ctrlKey) {
+      e.preventDefault();
+      invoke('edit_flows').catch(console.error);
+    }
+  });
+
   const selectScript = ({ value }: SelectItem) => {
     invoke('select_script', { name: value })
       .then(toClientPrompt)
@@ -24,13 +34,12 @@ const App = () => {
       .catch(console.error);
   };
 
-  const handleSuccess = (data: unknown) => {
-    console.log(data);
+  const handleSuccess = () => {
     setScript(undefined);
   };
 
   const handleError = (error: unknown) => {
-    console.log(error);
+    console.error(error);
     setScript(undefined);
   };
 
@@ -39,8 +48,6 @@ const App = () => {
   const resize = useCallback(async () => {
     try {
       if (width > 0 && height > 0) {
-        console.log({ w: width, h: height });
-
         await appWindow.setSize(new LogicalSize(width, height));
       }
     } catch (e) {

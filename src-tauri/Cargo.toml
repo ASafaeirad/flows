@@ -19,7 +19,7 @@ serde_json = {version = "1.0.93"}
 swc_common = {version = "0.29.33", default-features = false, features = ["tty-emitter"] }
 swc_ecma_ast = {version = "0.98.0", default-features = false, features = [] }
 swc_ecma_parser = {version = "0.128.0", default-features = false, features = ["typescript"] }
-tauri = {version = "1.2", features = ["global-shortcut-all", "shell-open", "window-all"] }
+tauri = {version = "1.2", features = ["global-shortcut-all", "window-all"] }
 
 [features]
 # by default Tauri runs in production mode

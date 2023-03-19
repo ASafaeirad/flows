@@ -36,6 +36,7 @@ fn main() {
             commands::create_script::create_script,
             commands::edit_script::edit_script,
             commands::delete_script::delete_script,
+            commands::edit_flows::edit_flows,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

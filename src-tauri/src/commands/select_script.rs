@@ -8,8 +8,7 @@ pub fn select_script(name: &str) -> Result<String, String> {
 
     let output = Command::new(config.schema_script)
         .arg(script)
-        .output()
-        .expect("Cannot run the \"schema.ts\" command");
+        .output();
 
     utils::output_to_result(output)
 }

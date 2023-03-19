@@ -10,8 +10,7 @@ pub fn run(script: &str, args: &str) -> Result<String, String> {
     let output = Command::new(config.run_script)
         .arg(script)
         .arg(args)
-        .output()
-        .expect("Cannot run the \"run.ts\" command");
+        .output();
 
     utils::output_to_result(output)
 }

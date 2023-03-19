@@ -70,7 +70,7 @@ export const Select = forwardRef<HTMLInputElement, Props>(
         setSelected((s) => s - 1);
       }
 
-      if (key === 'e' && e.ctrlKey) {
+      if (key === 'e' && e.ctrlKey && !e.shiftKey) {
         e.preventDefault();
         const item = filteredItems[selectedIndex];
         if (item) onEdit?.(item);
@@ -91,7 +91,6 @@ export const Select = forwardRef<HTMLInputElement, Props>(
         }
 
         const item = filteredItems[selectedIndex];
-        console.log(item);
         if (item) onSelect?.(item);
       }
     };
@@ -100,7 +99,7 @@ export const Select = forwardRef<HTMLInputElement, Props>(
       <div className="flex flex-col gap-3">
         <Input
           {...props}
-          onKeyDown={handleKeyDown}
+          onKeyUp={handleKeyDown}
           placeholder={placeholder}
           value={value}
           onChange={(e) => setValue(e.target.value)}
