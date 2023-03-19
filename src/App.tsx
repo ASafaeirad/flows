@@ -50,7 +50,7 @@ const App = () => {
 
   useEffect(() => {
     void resize();
-    void appWindow.center();
+    appWindow.center().catch(console.error);
   }, [resize]);
 
   return (

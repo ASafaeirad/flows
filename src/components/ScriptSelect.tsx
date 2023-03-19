@@ -68,6 +68,7 @@ export const SelectScript = forwardRef<HTMLInputElement, Props>(
         ref={ref}
         items={scripts}
         getLabel={(v) => v.label}
+        getId={(v) => v.value}
         onSelect={onSelect}
         onDelete={handleDelete}
         placeholder="Select Script"
