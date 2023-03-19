@@ -16,9 +16,10 @@ impl Config {
     pub fn new() -> Self {
         let script_path = env::var("FLOWS_SCRIPT_PATH").unwrap_or_default();
         let editor_name = env::var("FLOWS_EDITOR").unwrap_or("vim".to_owned());
-        let mut runner_dir = env::current_dir().unwrap();
-        runner_dir.pop();
-        runner_dir.push("runner");
+        let runner_dir = env::var("FLOWS_RUNNER_PATH").map_or_else(
+            |_e| PathBuf::from(&script_path).join(".flows"),
+            |p| PathBuf::from(p),
+        );
 
         let run_script = runner_dir.join("run.ts");
         let schema_script = runner_dir.join("schema.ts");

@@ -39,7 +39,7 @@
         "icons/icon.icns",
         "icons/icon.ico"
       ],
-      "identifier": "com.tauri.dev",
+      "identifier": "com.skill.dev",
       "longDescription": "",
       "macOS": {
         "entitlements": null,
@@ -48,7 +48,9 @@
         "providerShortName": null,
         "signingIdentity": null
       },
-      "resources": [],
+      "resources": [
+        "../runner/*"
+      ],
       "shortDescription": "",
       "targets": "all",
       "windows": {
