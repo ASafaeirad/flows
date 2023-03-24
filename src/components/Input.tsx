@@ -19,7 +19,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <input
         ref={ref}
-        onKeyDown={handleKeyDown}
+        onKeyUp={handleKeyDown}
         className="w-full rounded border border-solid border-border bg-dark-1 px-5 py-3 text-light-0 placeholder-placeholder"
         {...props}
       />

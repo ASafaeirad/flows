@@ -24,7 +24,7 @@ export const DateItem = ({
   ...props
 }: Props): JSX.Element => {
   const Component = isLabel ? 'div' : 'button';
-  const { pressProps } = usePress({ onPress });
+  const { pressProps } = usePress({ onPressEnd: onPress });
 
   return createElement(Component, {
     className: cls(

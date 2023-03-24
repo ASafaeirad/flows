@@ -23,7 +23,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     const inputRef = useRef<HTMLInputElement>(null);
     const handleRef = useForkRef(ref, inputRef);
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
+    const handleKeyUp = (e: React.KeyboardEvent) => {
       if (e.key === 'j' || e.key === 'ArrowDown') setValue(addWeeks(value, 1));
       if (e.key === 'k' || e.key === 'ArrowUp') setValue(addWeeks(value, -1));
       if (e.key === 'l' || e.key === 'ArrowRight') setValue(addDays(value, 1));
@@ -35,7 +35,7 @@ export const DatePicker = forwardRef<HTMLInputElement, Props>(
     return (
       <div className="relative flex flex-col gap-3">
         <Input
-          onKeyDown={handleKeyDown}
+          onKeyUp={handleKeyUp}
           ref={handleRef}
           value={format(value, dateFormat)}
           placeholder={placeholder}

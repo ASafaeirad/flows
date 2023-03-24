@@ -12,7 +12,7 @@ void isRegistered('CommandOrControl+Shift+C').then((registered) => {
   if (!registered)
     void register('CommandOrControl+Shift+C', () => {
       void appWindow.show();
-      console.log('Shortcut triggered');
+      appWindow.center().catch(console.error);
     });
 });
 

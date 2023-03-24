@@ -73,8 +73,13 @@ const App = () => {
 
   useEffect(() => {
     void resize();
-    appWindow.center().catch(console.error);
   }, [resize]);
+
+  useEffect(() => {
+    setTimeout(() => {
+      appWindow.center().catch(console.error);
+    }, 50);
+  }, []);
 
   return (
     <div ref={ref}>
