@@ -6,6 +6,7 @@ import { useEventListener } from 'usehooks-ts';
 
 import { type SelectRef } from './components/List';
 import { type Prompt } from './components/Prompt';
+import { type PromptRef } from './components/Prompts';
 import { Prompts } from './components/Prompts';
 import { type SelectItem } from './components/ScriptSelect';
 import { SelectScript } from './components/ScriptSelect';
@@ -16,6 +17,7 @@ const App = () => {
   const [script, setScript] = useState<string | undefined>();
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const inputRef = useRef<SelectRef>(null);
+  const promptRef = useRef<PromptRef>(null);
 
   useEventListener('keydown', (e) => {
     const key = e.key as KeyboardEventKey;
@@ -28,8 +30,10 @@ const App = () => {
     if (key === 'Escape') {
       e.preventDefault();
 
-      if (script) setScript(undefined);
-      else {
+      if (script) {
+        const step = promptRef.current?.revert();
+        if (step === 0) setScript(undefined);
+      } else {
         inputRef.current?.clear();
         void appWindow.hide();
       }
@@ -79,6 +83,7 @@ const App = () => {
           <SelectScript onSelect={selectScript} ref={inputRef} />
         ) : (
           <Prompts
+            ref={promptRef}
             onSuccess={handleSuccess}
             onError={handleError}
             script={script}

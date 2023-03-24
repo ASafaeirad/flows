@@ -52,12 +52,12 @@ export const Select = forwardRef<SelectRef, Props>(
       getLabel,
     );
     useImperativeHandle(ref, () => {
-      return {
-        ...inputRef.current!,
+      // eslint-disable-next-line fp/no-mutating-assign
+      return Object.assign(inputRef.current!, {
         clear: () => {
           setValue('');
         },
-      };
+      });
     });
 
     const handleRef = useForkRef(ref, inputRef);
