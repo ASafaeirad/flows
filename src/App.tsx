@@ -1,9 +1,10 @@
 import { isNull } from '@fullstacksjs/toolbox';
 import { invoke } from '@tauri-apps/api';
 import { appWindow, LogicalSize } from '@tauri-apps/api/window';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useEventListener } from 'usehooks-ts';
 
+import { type SelectRef } from './components/List';
 import { type Prompt } from './components/Prompt';
 import { Prompts } from './components/Prompts';
 import { type SelectItem } from './components/ScriptSelect';
@@ -14,6 +15,7 @@ import { useElementSize } from './hooks/useElementSize';
 const App = () => {
   const [script, setScript] = useState<string | undefined>();
   const [prompts, setPrompts] = useState<Prompt[]>([]);
+  const inputRef = useRef<SelectRef>(null);
 
   useEventListener('keydown', (e) => {
     const key = e.key as KeyboardEventKey;
@@ -21,6 +23,16 @@ const App = () => {
     if (key === 'E' && e.shiftKey && e.ctrlKey) {
       e.preventDefault();
       invoke('edit_flows').catch(console.error);
+    }
+
+    if (key === 'Escape') {
+      e.preventDefault();
+
+      if (script) setScript(undefined);
+      else {
+        inputRef.current?.clear();
+        void appWindow.hide();
+      }
     }
   });
 
@@ -64,7 +76,7 @@ const App = () => {
     <div ref={ref}>
       <div className="flex min-w-[32rem] flex-col gap-3 overflow-hidden rounded-lg p-5 text-light-0">
         {isNull(script) ? (
-          <SelectScript onSelect={selectScript} />
+          <SelectScript onSelect={selectScript} ref={inputRef} />
         ) : (
           <Prompts
             onSuccess={handleSuccess}

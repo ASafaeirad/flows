@@ -1,6 +1,6 @@
 {
   "build": {
-    "beforeDevCommand": "pnpm start",
+    "beforeDevCommand": "pnpx vite",
     "beforeBuildCommand": "pnpm build",
     "devPath": "http://localhost:1420",
     "distDir": "../dist",

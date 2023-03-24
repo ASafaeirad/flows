@@ -1,5 +1,11 @@
 import { isEmpty } from '@fullstacksjs/toolbox';
-import { forwardRef, Fragment, useRef, useState } from 'react';
+import {
+  forwardRef,
+  Fragment,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from 'react';
 
 import { useFilter, useForkRef } from '../hooks';
 import { type InputProps } from './Input';
@@ -18,7 +24,11 @@ interface Props<T = string> extends Omit<InputProps, 'onSelect' | 'ref'> {
   onDelete?: (x: T) => void;
 }
 
-export const Select = forwardRef<HTMLInputElement, Props>(
+export type SelectRef = HTMLInputElement & {
+  clear: VoidFunction;
+};
+
+export const Select = forwardRef<SelectRef, Props>(
   (
     {
       items,
@@ -41,6 +51,14 @@ export const Select = forwardRef<HTMLInputElement, Props>(
       value,
       getLabel,
     );
+    useImperativeHandle(ref, () => {
+      return {
+        ...inputRef.current!,
+        clear: () => {
+          setValue('');
+        },
+      };
+    });
 
     const handleRef = useForkRef(ref, inputRef);
     const isNewItem =
